@@ -4,6 +4,7 @@ package ecsstream;
 option go_package = "protobuf/go/ecs-stream";
 
 message TxMetadata {
+  string from = 1;
   string to = 2;
   bytes data = 3;
   uint64 value = 4;

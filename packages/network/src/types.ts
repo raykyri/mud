@@ -91,6 +91,7 @@ export type NetworkComponentUpdate<C extends Components = Components> = {
 
 export type SystemCallTransaction = {
   hash: string;
+  from: string;
   to: string;
   data: string;
   value: BigNumber;

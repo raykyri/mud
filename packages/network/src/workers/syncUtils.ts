@@ -572,6 +572,7 @@ function createFetchSystemCallData(fetchBlock: ReturnType<typeof createBlockCach
     if (!tx) return;
 
     return {
+      from: tx.from,
       to: tx.to,
       data: tx.data,
       value: tx.value,

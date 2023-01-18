@@ -45,6 +45,7 @@ func LogsToEcsEvents(
 		if includeTxMetadata {
 			tx := txHashToTx[eventLog.TxHash.Hex()]
 			ecsEvent.TxMetadata = &pb.TxMetadata{
+				From:  tx.From().Hex(),
 				Data:  tx.Data(),
 				Value: tx.Value().Uint64(),
 			}
