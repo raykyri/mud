@@ -839,5 +839,44 @@ describe("Query", () => {
 
       expect(new Set([...query.matching])).toEqual(new Set([Instance3, Entity8]));
     });
+
+    it("should only trigger for entities that got updated, not all entities", () => {
+      const entity1 = createEntity(world, [withValue(Name, { name: "NotAlice" })]);
+      const entity2 = createEntity(world, [withValue(Name, { name: "NotAlice" })]);
+
+      const query = defineQuery([Has(Name)]);
+
+      const spy = jest.fn();
+      query.update$.subscribe((update) => spy(update.entity));
+
+      setComponent(Name, entity1, { name: "Alice" });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenLastCalledWith(entity1);
+
+      setComponent(Name, entity2, { name: "Alice" });
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenLastCalledWith(entity2);
+    });
+
+    it.only("should only trigger for entities that got updated, not all entities, also with proxy fragments", () => {
+      const alice = createEntity(world, [withValue(Name, { name: "Alice" })]);
+      const entity1 = createEntity(world, [withValue(CanMove, { value: true })]);
+      const entity2 = createEntity(world, [withValue(CanMove, { value: true })]);
+
+      const query = defineQuery([Has(CanMove), ProxyRead(OwnedByEntity, 99), HasValue(Name, { name: "Alice" })], {
+        runOnInit: true,
+      });
+
+      const spy = jest.fn();
+      query.update$.subscribe((update) => spy(update.entity));
+
+      setComponent(OwnedByEntity, entity1, { value: getEntityId(alice) });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenNthCalledWith(1, entity1);
+
+      setComponent(OwnedByEntity, entity2, { value: getEntityId(alice) });
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenNthCalledWith(2, entity2);
+    });
   });
 });
