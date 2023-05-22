@@ -8,12 +8,12 @@ By writing a simple query to find all players and render them in the client, we�
 
 <CollapseCode>
 
-```tsx filename="GameBoard.tsx" {1,8,22-30,57} copy showLineNumbers
+```tsx filename="GameBoard.tsx" {1,5,8,22-30,57} copy showLineNumbers
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { GameMap } from "./GameMap";
 import { useMUD } from "./MUDContext";
 import { useKeyboardMovement } from "./useKeyboardMovement";
-import { hexToArray } from "@latticexyz/utils";
+import { hexToArray, toEthAddress } from "@latticexyz/utils";
 import { TerrainType, terrainTypes } from "./terrainTypes";
 import { EncounterScreen } from "./EncounterScreen";
 import { Entity, Has, getComponentValueStrict } from "@latticexyz/recs";
@@ -36,7 +36,7 @@ export const GameBoard = () => {
       entity,
       x: position.x,
       y: position.y,
-      emoji: entity === playerEntity ? "🤠" : "🥸",
+      emoji: toEthAddress(entity) === playerEntity ? "🤠" : "🥸",
     };
   });
 
